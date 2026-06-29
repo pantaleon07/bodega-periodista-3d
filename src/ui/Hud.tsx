@@ -47,7 +47,7 @@ export function Hud() {
       {/* barra superior */}
       <div className="topbar">
         <div className="brand">
-          <span className="dot" /> Bodega · Col. Periodista <em>400 m²</em>
+          <span className="dot" /> Bodega NIUTEC <em>≈ 777 m²</em>
         </div>
 
         <div className="seg">
@@ -115,7 +115,7 @@ export function Hud() {
       {/* leyenda */}
       <div className="legend">
         <div><span className="sw" style={{ background: '#D4581A' }} /> Flujo de descarga</div>
-        <div><span className="sw" style={{ background: '#8B1A2B' }} /> Almacén (farmacia)</div>
+        <div><span className="sw" style={{ background: '#8B1A2B' }} /> Oficina</div>
         <div><span className="sw" style={{ background: '#E8B100' }} /> Circulación</div>
         <div>
           <span
@@ -125,7 +125,7 @@ export function Hud() {
                 'repeating-linear-gradient(45deg,#E8B100 0 3px,transparent 3px 6px)',
             }}
           />{' '}
-          Cajón exclusivo tortón (11 m)
+          Cajón / rampa del tortón
         </div>
       </div>
 
@@ -180,8 +180,8 @@ export function Hud() {
 
             <hr />
             <p className="muted">
-              Medidas: huella 20×20 m · bóveda alero 3.50 / caballete 7.50 m · portón 4.55×4.5 m ·
-              camión ~{TRUCK_LEN.toFixed(1)} m de reversa al portón con rampa.
+              Medidas: nave 25.65 × 30.30 m · bóveda muros 5.00 / cumbrera 10.00 m · 2 portones de
+              5.00 m · camión ~{TRUCK_LEN.toFixed(1)} m de reversa al portón con rampa.
             </p>
             <button className="close" onClick={() => set({ helpOpen: false })}>
               Entendido

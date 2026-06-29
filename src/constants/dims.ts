@@ -1,66 +1,65 @@
 // =============================================================================
-//  FUENTE ÚNICA DE VERDAD  —  Bodega Col. Periodista, 400 m² (Oaxaca)
-//  Todas las medidas en METROS. Nada de geometría se hardcodea en componentes:
-//  se deriva de aquí.
+//  FUENTE ÚNICA DE VERDAD  —  Bodega NIUTEC SA de CV
+//  Col. Ex-Hacienda de la Sangre de Cristo, Oaxaca de Juárez.
+//  Plano arquitectónico ARQ.-1 (Agosto 2024, esc. 1:125).
+//  Todas las medidas en METROS.
 //
-//  Sistema de coordenadas (ver §2 del brief):
-//    X = este(+)  / oeste(−)
-//    Z = sur(+, calle/fachada)  / norte(−, fondo)
-//    Y = altura
-//  Origen en el CENTRO de la planta. Huella 20×20 → X∈[-10,10], Z∈[-10,10].
-//  Piso a nivel de calle (sin andén elevado).
+//  Coordenadas:  X = este(+)/oeste(−) ,  Z = sur(+, patio/calle)/norte(−, fondo) ,
+//  Y = altura.  Origen en el CENTRO de la nave (bodega).
+//
+//  Nave (bodega): 25.65 (X, ejes A-C) × 30.30 (Z, ejes 1-6, claros de 6.06).
+//  Bóveda de cañón: arranque/muros 5.00 m, cumbrera 10.00 m, claro interior 22.96.
+//  Testera SUR (frente): 2 portones de herrería de 5.00 m + oficina/½ baño al centro.
+//  Patio de maniobras al sur + caseta de vigilancia (lote total ~60 m).
 // =============================================================================
 
 // ----------------------------------------------------------------------------
-//  Paleta
+//  Paleta (marca El Tío para acentos UI/markers)
 // ----------------------------------------------------------------------------
 export const COLORS = {
-  // Marca El Tío (acentos UI / markers)
   brandMaroon: '#8B1A2B',
   brandOrange: '#D4581A',
   brandPeach: '#E8956D',
 
-  // Materiales de obra
-  roofMetal: '#b4b9bf', // lámina galvanizada / aluzinc
-  wallBone: '#ece7df', // block pintado hueso
-  wallBase: '#5c5e63', // zócalo gris oxford (1.2 m)
-  steel: '#3a3a40', // estructura / costillas
-  concrete: '#9d9c97', // firme de concreto
-  joint: '#7c7b77', // juntas del piso
-  flowYellow: '#E8B100', // líneas amarillas de circulación
-  rackOrange: '#E0571C', // anaqueles
+  roofMetal: '#b4b9bf',
+  wallBone: '#ece7df',
+  wallBase: '#5c5e63',
+  steel: '#3a3a40',
+  concrete: '#9d9c97',
+  joint: '#7c7b77',
+  flowYellow: '#E8B100',
+  rackOrange: '#E0571C',
 
-  truckBody: '#f3f4f6', // blanco hueso del camión
+  truckBody: '#f3f4f6',
   truckChrome: '#cfd3d8',
   truckGlass: '#1b2733',
   tire: '#15151a',
 } as const
 
 // ----------------------------------------------------------------------------
-//  Planta / huella
+//  Planta / huella de la NAVE
 // ----------------------------------------------------------------------------
 export const PLANT = {
-  minX: -10,
-  maxX: 10,
-  minZ: -10,
-  maxZ: 10,
-  halfX: 10,
-  halfZ: 10,
-  width: 20, // X
-  depth: 20, // Z
+  minX: -12.825,
+  maxX: 12.825,
+  minZ: -15.15,
+  maxZ: 15.15,
+  halfX: 12.825,
+  halfZ: 15.15,
+  width: 25.65, // X (ejes A-C)
+  depth: 30.3, // Z (ejes 1-6)
 } as const
 
 // ----------------------------------------------------------------------------
-//  Bóveda de cañón (lámina autoportante curva)
-//    Muros laterales rectos hasta el alero (3.4984), arco hasta el caballete.
-//    Perfil:  y(x) = centerY + sqrt(R² − x²)   con R=14.5, centerY=−7.0016
-//      x=0   → 7.4984 (caballete / cumbrera)
-//      x=±10 → 3.4984 (alero)
+//  Bóveda de cañón
+//    Arranque (muros) a 5.00 m, cumbrera a 10.00 m.
+//    Arco que arranca en x=±12.825 (y=5.00) y culmina en x=0 (y=10.00).
+//    R = (a²+h²)/(2h) con a=12.825, h=5.00 → R≈18.948 ; centro y≈−8.948.
 // ----------------------------------------------------------------------------
 export const ROOF = {
-  radius: 14.5,
-  centerY: -7.0016,
-  ribEvery: 3, // costillas cada ~3 m a lo largo de Z
+  radius: 18.948,
+  centerY: -8.948,
+  ribEvery: 6.06, // costillas en los ejes (claros de 6.06 m)
   shellThickness: 0.1,
 } as const
 
@@ -68,32 +67,31 @@ export function arcY(x: number): number {
   return ROOF.centerY + Math.sqrt(ROOF.radius * ROOF.radius - x * x)
 }
 
-export const EAVE = arcY(PLANT.halfX) // 3.4984 — altura de muros laterales
-export const RIDGE = arcY(0) // 7.4984 — caballete
+export const EAVE = arcY(PLANT.halfX) // ≈ 5.00 — arranque / altura de muros
+export const RIDGE = arcY(0) // ≈ 10.00 — cumbrera
 
 // ----------------------------------------------------------------------------
 //  Muros
 // ----------------------------------------------------------------------------
 export const WALL = {
-  perimeterThickness: 0.25,
+  perimeterThickness: 0.3,
   partitionThickness: 0.15,
-  roomHeight: 3.2, // muros de cuartos interiores
-  baseHeight: 1.2, // zócalo gris oxford
+  roomHeight: 2.8, // oficina / baño
+  baseHeight: 1.2, // zócalo
 } as const
 
 // ----------------------------------------------------------------------------
-//  Aberturas del muro sur (fachada / calle), Z = +10
+//  Aberturas en la testera SUR (frente), Z = +15.15
+//  2 portones de herrería de 5.00 m, flanqueando el bloque de oficina (8.67 m).
+//    margen 5.30 | portón 5.00 | central 8.67 | portón 5.00 | margen 1.68
 // ----------------------------------------------------------------------------
 export const OPENINGS = {
-  // Portón principal de descarga
-  porton: { x1: -3.18, x2: 1.37, height: 4.5 }, // 4.55 m de ancho × 4.5 alto
-  // Cortina del local comercial
-  cortina: { x1: -9.85, x2: -7.85, height: 2.43 }, // 2.0 m × 2.43
+  portonL: { x1: -7.525, x2: -2.525, height: 4.5 }, // portón izquierdo
+  portonR: { x1: 6.145, x2: 11.145, height: 4.5 }, // portón derecho (rampa)
 } as const
 
 // ----------------------------------------------------------------------------
-//  Espacios (cuartos). Cada uno: rectángulo en planta + alto + etiqueta.
-//  Las paredes se generan en PARTITIONS (no aquí) para no duplicar muros.
+//  Espacios
 // ----------------------------------------------------------------------------
 export interface RoomDef {
   id: string
@@ -104,88 +102,45 @@ export interface RoomDef {
   z2: number
   height: number
   ceiling: boolean
-  /** etiqueta flotante (centro, altura) */
   tint?: string
 }
 
 export const ROOMS: RoomDef[] = [
   {
     id: 'bodega',
-    label: 'BODEGA MAYOR',
-    x1: -10,
-    x2: 10,
-    z1: -10,
-    z2: 0,
+    label: 'BODEGA',
+    x1: -12.825,
+    x2: 12.825,
+    z1: -15.15,
+    z2: 15.15,
     height: EAVE,
     ceiling: false,
   },
   {
-    id: 'almacen',
-    label: 'ALMACÉN',
-    x1: -10,
-    x2: -5.95,
-    z1: 0.15,
-    z2: 4.1,
+    id: 'oficina',
+    label: 'OFICINA',
+    x1: -0.7,
+    x2: 4.8,
+    z1: 9.0,
+    z2: 13.8,
     height: WALL.roomHeight,
     ceiling: true,
     tint: COLORS.brandMaroon,
   },
   {
-    id: 'local',
-    label: 'LOCAL COMERCIAL',
-    x1: -10,
-    x2: -3.18,
-    z1: 4.1,
-    z2: 10,
-    height: WALL.roomHeight,
-    ceiling: true,
-  },
-  {
-    id: 'banoLocal',
-    label: 'BAÑO',
-    x1: -6.6,
-    x2: -3.9,
-    z1: 8.4,
-    z2: 10,
-    height: WALL.roomHeight,
-    ceiling: true,
-  },
-  {
-    id: 'oficinas',
-    label: 'OFICINAS',
-    x1: 1.37,
-    x2: 10,
-    z1: 4.1,
-    z2: 10,
-    height: WALL.roomHeight,
-    ceiling: true,
-  },
-  {
     id: 'banoOf',
     label: 'BAÑO',
-    x1: 7.45,
-    x2: 10,
-    z1: 5.75,
-    z2: 10,
+    x1: -0.7,
+    x2: 1.8,
+    z1: 13.8,
+    z2: 15.15,
     height: WALL.roomHeight,
     ceiling: true,
-  },
-  {
-    id: 'pasillo',
-    label: 'ACCESO',
-    x1: -3.18,
-    x2: 1.37,
-    z1: 0,
-    z2: 10,
-    height: EAVE,
-    ceiling: false,
   },
 ]
 
 // ----------------------------------------------------------------------------
-//  Muros: un muro es siempre alineado a eje (X constante o Z constante).
-//  Puede llevar UNA puerta (hueco). 'at' = centro del hueco sobre el eje que
-//  varía;  width/doorHeight definen el vano.
+//  Muros (alineados a eje, con puerta opcional)
 // ----------------------------------------------------------------------------
 export interface Wall {
   id: string
@@ -198,227 +153,154 @@ export interface Wall {
   door?: { at: number; width: number; height: number }
 }
 
-// Muros perimetrales laterales (este / oeste) — rectos hasta el alero.
+// Muros perimetrales laterales (este / oeste), rectos hasta el arranque (5.00).
 export const SIDE_WALLS: Wall[] = [
   {
     id: 'west',
-    x1: -10,
-    z1: -10,
-    x2: -10,
-    z2: 10,
+    x1: PLANT.minX,
+    z1: PLANT.minZ,
+    x2: PLANT.minX,
+    z2: PLANT.maxZ,
     height: EAVE,
     thickness: WALL.perimeterThickness,
   },
   {
     id: 'east',
-    x1: 10,
-    z1: -10,
-    x2: 10,
-    z2: 10,
+    x1: PLANT.maxX,
+    z1: PLANT.minZ,
+    x2: PLANT.maxX,
+    z2: PLANT.maxZ,
     height: EAVE,
     thickness: WALL.perimeterThickness,
   },
 ]
 
-// Particiones interiores (block ~3.2 m) con sus puertas.
+// Particiones interiores: oficina + ½ baño (bloque central-sur).
 export const PARTITIONS: Wall[] = [
-  // --- Almacén cerrado (candidato a farmacia) ---
-  // muro sur (mira a la bodega mayor) con puerta de acceso
+  // oficina — muro norte (mira a la bodega) con puerta
   {
-    id: 'almacen-S',
-    x1: -10,
-    z1: 0.15,
-    x2: -5.95,
-    z2: 0.15,
+    id: 'of-N',
+    x1: -0.7,
+    z1: 9.0,
+    x2: 4.8,
+    z2: 9.0,
     height: WALL.roomHeight,
     thickness: WALL.partitionThickness,
-    door: { at: -7.4, width: 1.1, height: 2.15 },
+    door: { at: 2.05, width: 1.1, height: 2.15 },
   },
-  // muro este
+  // oficina — muro oeste (envuelve oficina + baño)
   {
-    id: 'almacen-E',
-    x1: -5.95,
-    z1: 0.15,
-    x2: -5.95,
-    z2: 4.1,
-    height: WALL.roomHeight,
-    thickness: WALL.partitionThickness,
-  },
-  // --- Local comercial ---
-  // muro norte (compartido con almacén en parte) Z=4.10
-  {
-    id: 'local-N',
-    x1: -10,
-    z1: 4.1,
-    x2: -3.18,
-    z2: 4.1,
+    id: 'of-W',
+    x1: -0.7,
+    z1: 9.0,
+    x2: -0.7,
+    z2: 15.15,
     height: WALL.roomHeight,
     thickness: WALL.partitionThickness,
   },
-  // muro este (mira al pasillo) X=-3.18 con puerta
+  // oficina — muro este
   {
-    id: 'local-E',
-    x1: -3.18,
-    z1: 4.1,
-    x2: -3.18,
-    z2: 10,
-    height: WALL.roomHeight,
-    thickness: WALL.partitionThickness,
-    door: { at: 6.0, width: 1.1, height: 2.15 },
-  },
-  // --- Baño del local ---
-  {
-    id: 'banoLocal-W',
-    x1: -6.6,
-    z1: 8.4,
-    x2: -6.6,
-    z2: 10,
+    id: 'of-E',
+    x1: 4.8,
+    z1: 9.0,
+    x2: 4.8,
+    z2: 13.8,
     height: WALL.roomHeight,
     thickness: WALL.partitionThickness,
   },
+  // oficina — muro sur (tramo este, el oeste lo cierra el baño)
   {
-    id: 'banoLocal-E',
-    x1: -3.9,
-    z1: 8.4,
-    x2: -3.9,
-    z2: 10,
+    id: 'of-S',
+    x1: 1.8,
+    z1: 13.8,
+    x2: 4.8,
+    z2: 13.8,
     height: WALL.roomHeight,
     thickness: WALL.partitionThickness,
   },
+  // ½ baño — muro este
   {
-    id: 'banoLocal-N',
-    x1: -6.6,
-    z1: 8.4,
-    x2: -3.9,
-    z2: 8.4,
-    height: WALL.roomHeight,
-    thickness: WALL.partitionThickness,
-    door: { at: -5.25, width: 0.8, height: 2.1 },
-  },
-  // --- Oficinas ---
-  // muro oeste (mira al pasillo) X=1.37 con puerta
-  {
-    id: 'oficinas-W',
-    x1: 1.37,
-    z1: 4.1,
-    x2: 1.37,
-    z2: 10,
-    height: WALL.roomHeight,
-    thickness: WALL.partitionThickness,
-    door: { at: 6.0, width: 1.1, height: 2.15 },
-  },
-  // muro sur Z=4.10
-  {
-    id: 'oficinas-S',
-    x1: 1.37,
-    z1: 4.1,
-    x2: 10,
-    z2: 4.1,
+    id: 'ba-E',
+    x1: 1.8,
+    z1: 13.8,
+    x2: 1.8,
+    z2: 15.15,
     height: WALL.roomHeight,
     thickness: WALL.partitionThickness,
   },
-  // --- Baño de oficinas ---
+  // ½ baño — muro norte (mira a la oficina) con puerta
   {
-    id: 'banoOf-W',
-    x1: 7.45,
-    z1: 5.75,
-    x2: 7.45,
-    z2: 10,
+    id: 'ba-N',
+    x1: -0.7,
+    z1: 13.8,
+    x2: 1.8,
+    z2: 13.8,
     height: WALL.roomHeight,
     thickness: WALL.partitionThickness,
-  },
-  {
-    id: 'banoOf-S',
-    x1: 7.45,
-    z1: 5.75,
-    x2: 10,
-    z2: 5.75,
-    height: WALL.roomHeight,
-    thickness: WALL.partitionThickness,
-    door: { at: 8.7, width: 0.8, height: 2.1 },
+    door: { at: 0.55, width: 0.8, height: 2.1 },
   },
 ]
 
 // ----------------------------------------------------------------------------
-//  Camión — International MV (convencional, caja seca ~26'). Coordenadas
-//  LOCALES del camión: apunta hacia +Z (trasera de caja en z=0, frente en +z).
-//  Se coloca de reversa al portón: trasera en world Z≈+10.2, centrado X≈-0.9.
+//  Camión — International eMV, arrimado de reversa al PORTÓN DERECHO (rampa).
+//  Coords locales: apunta a +Z (trasera de caja en z=0, frente en +z).
 // ----------------------------------------------------------------------------
+const PORTON_R_CX = (OPENINGS.portonR.x1 + OPENINGS.portonR.x2) / 2 // 8.645
+
 export const TRUCK = {
-  // colocación en el mundo (origen local = cara trasera de la caja)
-  place: { x: -0.9, z: 10.2, rotY: 0 },
+  place: { x: PORTON_R_CX, z: PLANT.maxZ + 0.2, rotY: 0 },
 
-  deck: 1.25, // altura del piso de caja sobre el suelo
-
-  box: { len: 7.92, width: 2.59, height: 2.55 }, // caja seca 26'
+  deck: 1.25,
+  box: { len: 7.92, width: 2.59, height: 2.55 },
   gapBoxCab: 0.12,
-  cab: { len: 1.6, width: 2.42, base: 0.95, top: 2.62 }, // cabina
-  hood: { len: 1.4, width: 2.3, base: 0.95, top: 1.7 }, // cofre / nariz
+  cab: { len: 1.6, width: 2.42, base: 0.95, top: 2.62 },
+  hood: { len: 1.4, width: 2.3, base: 0.95, top: 1.7 },
   bumper: { height: 0.45, depth: 0.25 },
 
   tire: { radius: 0.525, width: 0.34 },
-  axle: {
-    rearZ: 2.4, // centro eje trasero (dual) en z local
-    frontZ: 9.0, // centro eje delantero en z local
-    trackHalf: 1.0, // separación de ruedas respecto al centro
-    dualGap: 0.38, // separación entre llantas duales traseras
-  },
+  axle: { rearZ: 2.4, frontZ: 9.0, trackHalf: 1.0, dualGap: 0.38 },
 
-  // Rampa niveladora dentro del portón (puente deck → piso a nivel)
   ramp: { width: 2.0, runZ: 4.2, fromDeck: 1.25 },
 } as const
 
-// total aproximado de largo (para validar maniobra)
-export const TRUCK_LEN =
-  TRUCK.box.len + TRUCK.gapBoxCab + TRUCK.cab.len + TRUCK.hood.len
-
-// altura del techo de la caja sobre el suelo (deck + alto de caja)
+export const TRUCK_LEN = TRUCK.box.len + TRUCK.gapBoxCab + TRUCK.cab.len + TRUCK.hood.len
 export const boxTop = TRUCK.deck + TRUCK.box.height
 
 // ----------------------------------------------------------------------------
-//  Patio / calle (maniobra de reversa). Al SUR de la fachada (Z > 10).
+//  Patio de maniobras (al SUR de la fachada) + lote
 // ----------------------------------------------------------------------------
 export const YARD = {
-  front: 11, // profundidad hacia el sur desde la fachada
-  width: 22, // ancho del patio en X
-  groundExtra: 40, // terreno extra alrededor
+  front: 26, // profundidad del patio hacia el sur
+  width: 28.5, // ancho del lote en X
+  groundExtra: 50,
 } as const
 
 // ----------------------------------------------------------------------------
-//  Flujo de descarga: del portón (sur) hacia la bodega mayor (norte).
-//  Flechas naranjas sobre el pasillo (X∈[-3.18,1.37]).
+//  Flujo de descarga: del portón derecho hacia el fondo de la bodega.
 // ----------------------------------------------------------------------------
-// Las flechas viven SOLO dentro del cajón del tortón (no se salen al resto de
-// la bodega): de la entrada del portón al extremo norte del cajón.
 export const FLOW = {
-  laneX: -0.9, // centro del carril (alineado al portón / camión)
-  fromZ: 9.2, // arranca pasada la entrada (dentro del cajón)
-  toZ: -0.6, // termina al borde norte del cajón del tortón (≈ -1)
-  arrows: 5,
+  laneX: PORTON_R_CX,
+  fromZ: 13.6,
+  toZ: -13,
+  arrows: 7,
 } as const
 
-// ----------------------------------------------------------------------------
-//  Zona exclusiva del tortón (estacionamiento reservado) — 11 m de largo,
-//  rayado amarillo cruzado, alineada al portón / pasillo de acceso.
-//  Va del umbral del portón (Z=10) hacia el norte 11 m → Z=-1.
-// ----------------------------------------------------------------------------
+// Cajón exclusivo del tortón (rampa de descarga), en el portón derecho.
 export const TRUCK_BAY = {
-  x1: -3.18,
-  x2: 1.37,
-  zStart: PLANT.maxZ, // 10 (portón)
-  length: 11,
+  x1: OPENINGS.portonR.x1,
+  x2: OPENINGS.portonR.x2,
+  zStart: PLANT.maxZ,
+  length: 12,
 } as const
-export const TRUCK_BAY_ZEND = TRUCK_BAY.zStart - TRUCK_BAY.length // -1
+export const TRUCK_BAY_ZEND = TRUCK_BAY.zStart - TRUCK_BAY.length
 
 // ----------------------------------------------------------------------------
 //  Tipos / helpers de colisión y render de muros
 // ----------------------------------------------------------------------------
 export interface Box {
-  /** centro */
   cx: number
   cy: number
   cz: number
-  /** tamaño */
   sx: number
   sy: number
   sz: number
@@ -431,15 +313,10 @@ export interface AABB {
   maxZ: number
 }
 
-/** ¿el muro es de Z constante (varía X)?  si no, es de X constante (varía Z) */
 function isAlongX(w: Wall): boolean {
   return Math.abs(w.z1 - w.z2) < 1e-6
 }
 
-/**
- * Expande un muro a cajas para RENDER (incluye dintel sobre la puerta) y a
- * cajas SÓLIDAS para colisión (excluye dintel; deja pasar por el vano).
- */
 export function wallBoxes(w: Wall): { render: Box[]; collide: Box[] } {
   const render: Box[] = []
   const collide: Box[] = []
@@ -470,15 +347,7 @@ export function wallBoxes(w: Wall): { render: Box[]; collide: Box[] } {
         render.push(box)
         collide.push(box)
       }
-      // dintel (solo render)
-      render.push({
-        cx: d.at,
-        cy: (d.height + h) / 2,
-        cz: z,
-        sx: d.width,
-        sy: h - d.height,
-        sz: t,
-      })
+      render.push({ cx: d.at, cy: (d.height + h) / 2, cz: z, sx: d.width, sy: h - d.height, sz: t })
     }
   } else {
     const x = w.x1
@@ -504,20 +373,12 @@ export function wallBoxes(w: Wall): { render: Box[]; collide: Box[] } {
         render.push(box)
         collide.push(box)
       }
-      render.push({
-        cx: x,
-        cy: (d.height + h) / 2,
-        cz: d.at,
-        sx: t,
-        sy: h - d.height,
-        sz: d.width,
-      })
+      render.push({ cx: x, cy: (d.height + h) / 2, cz: d.at, sx: t, sy: h - d.height, sz: d.width })
     }
   }
   return { render, collide }
 }
 
-/** AABB (planta XZ) a partir de una caja, con padding opcional. */
 export function boxToAABB(b: Box, pad = 0): AABB {
   return {
     minX: b.cx - b.sx / 2 - pad,
@@ -527,44 +388,25 @@ export function boxToAABB(b: Box, pad = 0): AABB {
   }
 }
 
-/**
- * Segmentos sólidos del muro SUR (fachada) dejando libres portón y cortina.
- * Se usan para colisión y para el frontón (que se dibuja como shape aparte).
- */
+/** Segmentos sólidos de la testera SUR dejando libres los 2 portones. */
 export function southWallColliders(): Box[] {
   const z = PLANT.maxZ
   const h = EAVE
   const t = WALL.perimeterThickness
-  // tramos llenos: [-10,-9.85] | [-7.85,-3.18] | [1.37,10]
   const spans: [number, number][] = [
-    [PLANT.minX, OPENINGS.cortina.x1],
-    [OPENINGS.cortina.x2, OPENINGS.porton.x1],
-    [OPENINGS.porton.x2, PLANT.maxX],
+    [PLANT.minX, OPENINGS.portonL.x1],
+    [OPENINGS.portonL.x2, OPENINGS.portonR.x1],
+    [OPENINGS.portonR.x2, PLANT.maxX],
   ]
   return spans
     .filter(([a, b]) => b - a > 0.01)
     .map(([a, b]) => ({ cx: (a + b) / 2, cy: h / 2, cz: z, sx: b - a, sy: h, sz: t }))
 }
 
-// ----------------------------------------------------------------------------
-//  Áreas (m²) por zona — para el panel y las etiquetas.
-// ----------------------------------------------------------------------------
-export function roomArea(r: RoomDef): number {
-  return Math.abs(r.x2 - r.x1) * Math.abs(r.z2 - r.z1)
-}
-
-export const AREAS = ROOMS.map((r) => ({ id: r.id, label: r.label, area: roomArea(r) }))
-
-export const FOOTPRINT_AREA = PLANT.width * PLANT.depth // 400 m²
-
-/** Construye todos los AABB sólidos para colisión en primera persona. */
 export function buildColliders(): AABB[] {
   const boxes: Box[] = []
-  // muros laterales
   for (const w of SIDE_WALLS) boxes.push(...wallBoxes(w).collide)
-  // particiones
   for (const w of PARTITIONS) boxes.push(...wallBoxes(w).collide)
-  // muro sur (segmentos) + muro norte (lleno)
   boxes.push(...southWallColliders())
   boxes.push({
     cx: 0,
@@ -576,3 +418,14 @@ export function buildColliders(): AABB[] {
   })
   return boxes.map((b) => boxToAABB(b))
 }
+
+// ----------------------------------------------------------------------------
+//  Áreas (m²) por zona
+// ----------------------------------------------------------------------------
+export function roomArea(r: RoomDef): number {
+  return Math.abs(r.x2 - r.x1) * Math.abs(r.z2 - r.z1)
+}
+
+export const AREAS = ROOMS.map((r) => ({ id: r.id, label: r.label, area: roomArea(r) }))
+
+export const FOOTPRINT_AREA = PLANT.width * PLANT.depth // ≈ 777 m²

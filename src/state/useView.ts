@@ -50,7 +50,7 @@ export const useView = create<ViewState>((set) => ({
   showRoof: true,
   showLabels: true,
   showFlow: true,
-  showRacks: true,
+  showRacks: false,
   showTruck: true,
   postFx: true,
 
@@ -62,13 +62,13 @@ export const useView = create<ViewState>((set) => ({
 
   sunIntensity: 2.4,
   fillIntensity: 0.35,
-  truckX: -0.9,
+  truckX: 8.645, // portón derecho (rampa de descarga)
 
   set: (patch) => set(patch),
 
   playerX: 0,
-  playerZ: 6,
-  playerAngle: Math.PI, // mirando al norte (hacia la bodega)
+  playerZ: 12,
+  playerAngle: Math.PI, // mirando al norte (hacia el fondo)
   setPlayer: (x, z, angle) => set({ playerX: x, playerZ: z, playerAngle: angle }),
 
   locked: false,

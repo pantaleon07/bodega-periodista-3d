@@ -3,12 +3,12 @@ import { useView } from '../state/useView'
 import { ROOMS, OPENINGS, PLANT, FLOW, COLORS } from '../constants/dims'
 
 const SIZE = 190
-const MIN = -11
-const SPAN = 22
+// escala única en X y Z (sin distorsión); cubre la nave + margen
+const HALF = Math.max(PLANT.halfX, PLANT.halfZ) + 1.5
 
-const mx = (x: number) => ((x - MIN) / SPAN) * SIZE
-// Z+ (sur/calle) hacia ABAJO, Z− (norte/bodega) hacia ARRIBA
-const my = (z: number) => ((z - MIN) / SPAN) * SIZE
+const mx = (x: number) => ((x + HALF) / (2 * HALF)) * SIZE
+// Z+ (sur/patio) hacia ABAJO, Z− (norte/fondo) hacia ARRIBA
+const my = (z: number) => ((z + HALF) / (2 * HALF)) * SIZE
 
 export function Minimap() {
   const px = useView((s) => s.playerX)
@@ -22,26 +22,17 @@ export function Minimap() {
     const fh = my(PLANT.maxZ) - fy
     return (
       <g>
-        {/* huella */}
+        {/* huella de la nave */}
         <rect x={fx} y={fy} width={fw} height={fh} fill="#1b1f27" stroke="#3a4250" strokeWidth={1.5} />
         {/* cuartos */}
-        {ROOMS.filter((r) => r.id !== 'bodega' && r.id !== 'pasillo').map((r) => {
+        {ROOMS.filter((r) => r.id !== 'bodega').map((r) => {
           const x = mx(Math.min(r.x1, r.x2))
           const y = my(Math.min(r.z1, r.z2))
           const w = Math.abs(mx(r.x2) - mx(r.x1))
           const h = Math.abs(my(r.z2) - my(r.z1))
-          const fill = r.id === 'almacen' ? COLORS.brandMaroon : '#39424f'
+          const fill = r.id === 'oficina' ? COLORS.brandMaroon : '#39424f'
           return <rect key={r.id} x={x} y={y} width={w} height={h} fill={fill} opacity={0.85} stroke="#566" strokeWidth={0.6} />
         })}
-        {/* pasillo de acceso */}
-        <rect
-          x={mx(-3.18)}
-          y={my(0)}
-          width={mx(1.37) - mx(-3.18)}
-          height={my(10) - my(0)}
-          fill="#2a3340"
-          opacity={0.6}
-        />
         {/* flujo de descarga */}
         <line
           x1={mx(FLOW.laneX)}
@@ -53,24 +44,18 @@ export function Minimap() {
           strokeDasharray="4 3"
           markerEnd="url(#arrow)"
         />
-        {/* portón (sur) */}
-        <line
-          x1={mx(OPENINGS.porton.x1)}
-          y1={my(PLANT.maxZ)}
-          x2={mx(OPENINGS.porton.x2)}
-          y2={my(PLANT.maxZ)}
-          stroke={COLORS.brandOrange}
-          strokeWidth={3}
-        />
-        {/* cortina local (sur) */}
-        <line
-          x1={mx(OPENINGS.cortina.x1)}
-          y1={my(PLANT.maxZ)}
-          x2={mx(OPENINGS.cortina.x2)}
-          y2={my(PLANT.maxZ)}
-          stroke="#9aa"
-          strokeWidth={3}
-        />
+        {/* portones (sur) */}
+        {[OPENINGS.portonL, OPENINGS.portonR].map((o, i) => (
+          <line
+            key={i}
+            x1={mx(o.x1)}
+            y1={my(PLANT.maxZ)}
+            x2={mx(o.x2)}
+            y2={my(PLANT.maxZ)}
+            stroke={COLORS.brandOrange}
+            strokeWidth={3}
+          />
+        ))}
       </g>
     )
   }, [])
@@ -95,7 +80,7 @@ export function Minimap() {
       </svg>
       <div className="mm-tags">
         <span>N ↑</span>
-        <span>Calle ↓</span>
+        <span>Patio ↓</span>
       </div>
     </div>
   )

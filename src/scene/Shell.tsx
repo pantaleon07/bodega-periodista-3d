@@ -31,8 +31,8 @@ function BaseBand({ x1, x2, z }: { x1: number; x2: number; z: number }) {
   )
 }
 
-function PortonFrame() {
-  const { x1, x2, height } = OPENINGS.porton
+function PortonFrame({ o }: { o: { x1: number; x2: number; height: number } }) {
+  const { x1, x2, height } = o
   const z = PLANT.maxZ
   const s = 0.2 // sección del marco
   const w = x2 - x1
@@ -49,23 +49,9 @@ function PortonFrame() {
       <mesh position={[(x1 + x2) / 2, height + s / 2, z]} castShadow material={mat.frame()}>
         <boxGeometry args={[w + s * 2, s, 0.45]} />
       </mesh>
-    </group>
-  )
-}
-
-function Cortina() {
-  const { x1, x2, height } = OPENINGS.cortina
-  const z = PLANT.maxZ
-  const w = x2 - x1
-  // lamas horizontales (instancia visual simple con líneas en el material no;
-  // usamos un slab + marco). Persiana medio abierta.
-  return (
-    <group>
-      <mesh position={[(x1 + x2) / 2, height / 2, z]} castShadow receiveShadow material={mat.curtain()}>
-        <boxGeometry args={[w, height, 0.08]} />
-      </mesh>
-      <mesh position={[(x1 + x2) / 2, height + 0.12, z]} castShadow material={mat.frame()}>
-        <boxGeometry args={[w + 0.2, 0.18, 0.3]} />
+      {/* portón de herrería (lámina) entreabierto al fondo del vano */}
+      <mesh position={[(x1 + x2) / 2, height / 2, z - 0.12]} receiveShadow material={mat.curtain()}>
+        <boxGeometry args={[w - 0.06, height - 0.05, 0.05]} />
       </mesh>
     </group>
   )
@@ -117,17 +103,21 @@ export function Shell() {
         <BaseBand key={i} x1={b.cx - b.sx / 2} x2={b.cx + b.sx / 2} z={PLANT.maxZ} />
       ))}
 
-      <PortonFrame />
-      <Cortina />
+      {[OPENINGS.portonL, OPENINGS.portonR].map((o, i) => (
+        <PortonFrame key={i} o={o} />
+      ))}
 
-      {/* umbral del portón resaltado (franja en el piso) */}
-      <mesh
-        rotation={[-Math.PI / 2, 0, 0]}
-        position={[(OPENINGS.porton.x1 + OPENINGS.porton.x2) / 2, 0.012, PLANT.maxZ - 0.25]}
-      >
-        <planeGeometry args={[OPENINGS.porton.x2 - OPENINGS.porton.x1, 0.5]} />
-        <meshStandardMaterial color={'#1c1c1f'} roughness={0.6} />
-      </mesh>
+      {/* umbral de cada portón (franja en el piso) */}
+      {[OPENINGS.portonL, OPENINGS.portonR].map((o, i) => (
+        <mesh
+          key={`th-${i}`}
+          rotation={[-Math.PI / 2, 0, 0]}
+          position={[(o.x1 + o.x2) / 2, 0.012, PLANT.maxZ - 0.25]}
+        >
+          <planeGeometry args={[o.x2 - o.x1, 0.5]} />
+          <meshStandardMaterial color={'#1c1c1f'} roughness={0.6} />
+        </mesh>
+      ))}
     </group>
   )
 }

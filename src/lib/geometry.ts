@@ -90,21 +90,16 @@ export function makeFrontonShape(withOpenings: boolean): THREE.Shape {
   shape.lineTo(PLANT.minX, 0)
 
   if (withOpenings) {
-    const porton = new THREE.Path()
-    porton.moveTo(OPENINGS.porton.x1, 0)
-    porton.lineTo(OPENINGS.porton.x1, OPENINGS.porton.height)
-    porton.lineTo(OPENINGS.porton.x2, OPENINGS.porton.height)
-    porton.lineTo(OPENINGS.porton.x2, 0)
-    porton.lineTo(OPENINGS.porton.x1, 0)
-    shape.holes.push(porton)
-
-    const cortina = new THREE.Path()
-    cortina.moveTo(OPENINGS.cortina.x1, 0)
-    cortina.lineTo(OPENINGS.cortina.x1, OPENINGS.cortina.height)
-    cortina.lineTo(OPENINGS.cortina.x2, OPENINGS.cortina.height)
-    cortina.lineTo(OPENINGS.cortina.x2, 0)
-    cortina.lineTo(OPENINGS.cortina.x1, 0)
-    shape.holes.push(cortina)
+    // 2 portones de herrería en la testera sur
+    for (const o of [OPENINGS.portonL, OPENINGS.portonR]) {
+      const p = new THREE.Path()
+      p.moveTo(o.x1, 0)
+      p.lineTo(o.x1, o.height)
+      p.lineTo(o.x2, o.height)
+      p.lineTo(o.x2, 0)
+      p.lineTo(o.x1, 0)
+      shape.holes.push(p)
+    }
   }
   return shape
 }

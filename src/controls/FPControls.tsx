@@ -14,7 +14,7 @@ const RADIUS = 0.32 // medio cuerpo del jugador
 const ACCEL = 9 // suavizado de velocidad
 
 // límites del mundo (para no vagar infinito por el terreno)
-const BOUND = { minX: -28, maxX: 28, minZ: -28, maxZ: 30 }
+const BOUND = { minX: -18, maxX: 18, minZ: -18, maxZ: 44 }
 
 function blocked(x: number, z: number, colliders: AABB[]): boolean {
   for (const c of colliders) {
@@ -64,8 +64,8 @@ export function FPControls() {
 
   // spawn al entrar al modo FP
   useEffect(() => {
-    camera.position.set(-0.9, EYE, 7.0)
-    camera.lookAt(-0.9, EYE, 0)
+    camera.position.set(7, EYE, 12)
+    camera.lookAt(7, EYE, 0)
     yaw.current = Math.PI
     pitch.current = 0
     // FOV cómodo (evita mareo)

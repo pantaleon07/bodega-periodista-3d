@@ -11,7 +11,7 @@ export function LevaPanel() {
       Techo: true,
       Etiquetas: true,
       Flujo: true,
-      Anaqueles: true,
+      Anaqueles: false,
       Camión: true,
       PostFx: true,
     }),
@@ -20,7 +20,7 @@ export function LevaPanel() {
       Relleno: { value: 0.35, min: 0, max: 2, step: 0.05 },
     }),
     Camión: folder({
-      PosX: { value: -0.9, min: -3, max: 3, step: 0.05 },
+      PosX: { value: 8.645, min: -10, max: 12, step: 0.05 },
     }),
   })
 

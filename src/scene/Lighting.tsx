@@ -4,7 +4,7 @@ import { EAVE, RIDGE, PLANT } from '../constants/dims'
 import { ErrorBoundary } from '../lib/ErrorBoundary'
 import { useView } from '../state/useView'
 
-const SUN = { x: 22, y: 16, z: 18 } // dirección del sol (cálido, raking)
+const SUN = { x: 34, y: 30, z: 28 } // dirección del sol (cálido, raking)
 
 function Luminaire({ x, z, y }: { x: number; z: number; y: number }) {
   return (
@@ -27,8 +27,8 @@ function Luminaire({ x, z, y }: { x: number; z: number; y: number }) {
       <pointLight
         position={[0, -0.3, 0]}
         color="#ffdca6"
-        intensity={14}
-        distance={16}
+        intensity={20}
+        distance={22}
         decay={2}
       />
     </group>
@@ -67,11 +67,11 @@ export function Lighting() {
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
         shadow-camera-near={1}
-        shadow-camera-far={90}
-        shadow-camera-left={-26}
-        shadow-camera-right={26}
-        shadow-camera-top={26}
-        shadow-camera-bottom={-26}
+        shadow-camera-far={140}
+        shadow-camera-left={-28}
+        shadow-camera-right={28}
+        shadow-camera-top={28}
+        shadow-camera-bottom={-28}
         shadow-bias={-0.0004}
         shadow-normalBias={0.02}
       />
@@ -83,16 +83,19 @@ export function Lighting() {
       <hemisphereLight args={['#dfe7f2', '#6b6356', 0.45]} />
       <ambientLight intensity={0.12} />
 
-      {/* luminarias interiores cálidas */}
-      {[-6, 0, 6].map((z) =>
-        [-4.5, 4.5].map((x) => <Luminaire key={`${x}-${z}`} x={x} z={z} y={ly} />),
+      {/* luminarias interiores cálidas (rejilla en la nave) */}
+      {[-11, -3.5, 4, 11.5].map((z) =>
+        [-8, 0, 8].map((x) => <Luminaire key={`${x}-${z}`} x={x} z={z} y={ly} />),
       )}
-      {/* un par sobre el pasillo de acceso */}
-      <Luminaire x={-0.9} z={3} y={EAVE - 0.4} />
-      <Luminaire x={-0.9} z={-2} y={ly} />
 
-      {/* foco de patio (exterior, sobre el portón) */}
-      <pointLight position={[-0.9, EAVE + 0.5, PLANT.maxZ + 1.5]} intensity={8} distance={18} decay={2} color="#ffedd0" />
+      {/* foco de patio (exterior, sobre el portón de descarga) */}
+      <pointLight
+        position={[8.6, EAVE + 1, PLANT.maxZ + 3]}
+        intensity={12}
+        distance={26}
+        decay={2}
+        color="#ffedd0"
+      />
     </group>
   )
 }

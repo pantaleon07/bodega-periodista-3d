@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import * as THREE from 'three'
 import { Line, Text, Billboard } from '@react-three/drei'
-import { ROOMS, OPENINGS, EAVE, RIDGE } from '../constants/dims'
+import { PLANT, ROOMS, OPENINGS, EAVE, RIDGE } from '../constants/dims'
 
 const COLOR = '#23d6c4' // teal de cotas
 const Y = 0.06 // sobre el piso
@@ -59,35 +59,32 @@ export function Dimensions() {
   const dims = useMemo<DimDef[]>(() => {
     const list: DimDef[] = []
 
-    // ---- huella total (afuera) ----
-    list.push({ a: [-10, Y, -10.9], b: [10, Y, -10.9], label: '20.00' })
-    list.push({ a: [10.9, Y, -10], b: [10.9, Y, 10], label: '20.00' })
+    const { minX, maxX, minZ, maxZ, width, depth } = PLANT
+    const offN = minZ - 1.4 // línea de cota fuera del frontón norte
+    const offE = maxX + 1.4 // línea de cota fuera del muro este
 
-    // ---- cuartos: ancho (sobre borde sur) + fondo (sobre borde oeste) ----
-    const rooms = ROOMS.filter((r) => r.id !== 'bodega')
-    for (const r of rooms) {
+    // ---- huella de la nave (afuera) ----
+    list.push({ a: [minX, Y, offN], b: [maxX, Y, offN], label: f(width) }) // 25.65
+    list.push({ a: [offE, Y, minZ], b: [offE, Y, maxZ], label: f(depth) }) // 30.30
+
+    // ---- cuartos (oficina / baño): ancho + fondo ----
+    for (const r of ROOMS.filter((r) => r.id !== 'bodega')) {
       const xa = Math.min(r.x1, r.x2)
       const xb = Math.max(r.x1, r.x2)
       const za = Math.min(r.z1, r.z2)
       const zb = Math.max(r.z1, r.z2)
-      // ancho (X) sobre el borde norte del cuarto (un poco adentro)
       list.push({ a: [xa, Y, za + 0.3], b: [xb, Y, za + 0.3], label: f(xb - xa) })
-      // fondo (Z) sobre el borde oeste
       list.push({ a: [xa + 0.3, Y, za], b: [xa + 0.3, Y, zb], label: f(zb - za) })
     }
-    // bodega mayor: fondo (10 m) al oeste
-    list.push({ a: [-9.4, Y, -10], b: [-9.4, Y, 0], label: '10.00' })
 
-    // ---- portón (fachada, afuera) ----
-    list.push({
-      a: [OPENINGS.porton.x1, 0.1, 10.6],
-      b: [OPENINGS.porton.x2, 0.1, 10.6],
-      label: f(OPENINGS.porton.x2 - OPENINGS.porton.x1),
-    })
+    // ---- portones (fachada sur, afuera) ----
+    for (const o of [OPENINGS.portonL, OPENINGS.portonR]) {
+      list.push({ a: [o.x1, 0.1, maxZ + 0.9], b: [o.x2, 0.1, maxZ + 0.9], label: f(o.x2 - o.x1) })
+    }
 
     // ---- alturas de la bóveda (frontón norte, afuera) ----
-    list.push({ a: [-9, 0, -10.7], b: [-9, EAVE, -10.7], label: `${f(EAVE)} (alero)` })
-    list.push({ a: [0, 0, -10.7], b: [0, RIDGE, -10.7], label: `${f(RIDGE)} (caballete)` })
+    list.push({ a: [maxX - 1, 0, offN], b: [maxX - 1, EAVE, offN], label: `${f(EAVE)} (alero)` })
+    list.push({ a: [0, 0, offN], b: [0, RIDGE, offN], label: `${f(RIDGE)} (cumbrera)` })
 
     return list
   }, [])
