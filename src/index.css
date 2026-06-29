@@ -126,15 +126,29 @@ canvas {
 }
 
 .help-btn {
-  margin-left: auto;
-  width: 32px;
+  margin-left: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   height: 32px;
-  border-radius: 50%;
+  padding: 0 13px 0 7px;
+  border-radius: 999px;
   border: 1px solid var(--glass-brd);
   background: rgba(255, 255, 255, 0.06);
   color: #fff;
-  font-weight: 700;
+  font-weight: 600;
+  font-size: 13px;
   cursor: pointer;
+}
+.help-btn .q {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--maroon), var(--orange));
+  font-weight: 700;
+  font-size: 12px;
 }
 
 /* ---------- mira + pista ---------- */
@@ -360,6 +374,48 @@ canvas {
   border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
+}
+
+/* manual (versión larga del modal de ayuda) */
+.help-modal .card.manual {
+  width: min(560px, 94vw);
+  max-height: 86vh;
+  overflow-y: auto;
+  position: relative;
+}
+.help-modal .card.manual .x {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-brd);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+}
+.help-modal .manual h3 {
+  margin: 16px 0 6px;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: var(--peach);
+}
+.help-modal .manual ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+}
+.help-modal .manual li {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #d6dae0;
+}
+.help-modal .manual b {
+  color: #fff;
 }
 
 /* ---------- joystick móvil ---------- */

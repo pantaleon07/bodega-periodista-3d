@@ -83,8 +83,8 @@ export function Hud() {
           />
         </div>
 
-        <button className="help-btn" onClick={() => set({ helpOpen: !helpOpen })}>
-          ?
+        <button className="help-btn" onClick={() => set({ helpOpen: !helpOpen })} title="Manual de uso">
+          <span className="q">?</span> Ayuda
         </button>
       </div>
 
@@ -129,23 +129,59 @@ export function Hud() {
         </div>
       </div>
 
-      {/* ayuda */}
+      {/* ayuda / manual */}
       {helpOpen && (
         <div className="help-modal" onClick={() => set({ helpOpen: false })}>
-          <div className="card" onClick={(e) => e.stopPropagation()}>
-            <h2>Cómo navegar</h2>
-            <p>
-              <b>Exterior</b>: arrastra para orbitar, rueda/pellizco para acercar. Sin auto-giro.
-            </p>
-            <p>
-              <b>Recorrido (1ª persona)</b>: clic para capturar el cursor, <b>WASD</b> o flechas para
-              caminar, <b>Shift</b> para correr, <b>Esc</b> para soltar. En móvil: joystick para
-              moverte y arrastra con el dedo para mirar.
-            </p>
+          <div className="card manual" onClick={(e) => e.stopPropagation()}>
+            <button className="x" onClick={() => set({ helpOpen: false })} aria-label="Cerrar">
+              ✕
+            </button>
+            <h2>Manual de uso</h2>
+
+            <h3>1 · Cambiar de vista</h3>
+            <ul>
+              <li>
+                <b>Exterior</b> — vista en órbita: <b>arrastra</b> para girar alrededor, <b>rueda</b> del
+                ratón (o pellizco en móvil) para acercar/alejar.
+              </li>
+              <li>
+                <b>Recorrido</b> — primera persona: <b>clic</b> para capturar el cursor, <b>W A S D</b> o
+                flechas para caminar, <b>Shift</b> para correr, <b>Esc</b> para soltar. En móvil: usa el
+                <b> joystick</b> y arrastra con el dedo para mirar.
+              </li>
+            </ul>
+
+            <h3>2 · Capas (se prenden y apagan con un clic)</h3>
+            <ul>
+              <li><b>Techo</b> — muestra u oculta la bóveda. Apágalo para ver el interior desde afuera.</li>
+              <li><b>Etiquetas</b> — nombres y m² de cada zona.</li>
+              <li><b>Flujo</b> — flechas de descarga y el cajón exclusivo del tortón.</li>
+              <li><b>Anaqueles</b> — los racks y las personas de referencia.</li>
+              <li><b>Camión</b> — el tortón y su rampa niveladora.</li>
+              <li><b>Post</b> — efectos de realismo (sombras suaves, brillo). Apágalo si va lento.</li>
+            </ul>
+
+            <h3>3 · Herramientas de medición</h3>
+            <ul>
+              <li><b>Cotas</b> — muestra las acotaciones con las medidas reales.</li>
+              <li><b>Áreas</b> — abre el panel con los m² de cada zona (arriba a la izquierda).</li>
+              <li>
+                <b>Medir</b> — haz <b>clic en 2 puntos del piso</b> y te da la distancia. Usa
+                <b> Limpiar</b> o <b>Salir</b> en la barra de abajo. (Funciona en vista Exterior.)
+              </li>
+            </ul>
+
+            <h3>4 · Extras</h3>
+            <ul>
+              <li><b>Minimapa</b> (abajo-izq., solo en Recorrido) — tu posición y hacia dónde miras.</li>
+              <li><b>Leyenda</b> (abajo-der.) — qué significa cada color del piso.</li>
+              <li><b>Ajustes</b> (arriba-der.) — ajusta en vivo el sol, el relleno y la posición del camión.</li>
+            </ul>
+
             <hr />
             <p className="muted">
-              Huella 20×20 m · bóveda alero 3.50 m / caballete 7.50 m · portón 4.55×4.5 m · camión
-              ~{TRUCK_LEN.toFixed(1)} m arrimado de reversa con rampa niveladora.
+              Medidas: huella 20×20 m · bóveda alero 3.50 / caballete 7.50 m · portón 4.55×4.5 m ·
+              camión ~{TRUCK_LEN.toFixed(1)} m de reversa al portón con rampa.
             </p>
             <button className="close" onClick={() => set({ helpOpen: false })}>
               Entendido
