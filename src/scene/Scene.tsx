@@ -7,6 +7,7 @@ import { Truck } from './Truck'
 import { FlowMarkers, ZoneLabels } from './FlowMarkers'
 import { Racks } from './Racks'
 import { People } from './People'
+import { Fridges } from './Fridges'
 import { TruckBay } from './TruckBay'
 import { Dimensions } from './Dimensions'
 import { MeasureTool } from './MeasureTool'
@@ -36,6 +37,7 @@ export function Scene() {
       {showLabels && <ZoneLabels />}
       {showRacks && <Racks />}
       {showRacks && <People />}
+      {showRacks && <Fridges />}
       {showDims && <Dimensions />}
       <MeasureTool />
 
