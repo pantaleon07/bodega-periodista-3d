@@ -1,0 +1,7 @@
+# Despliegue automático en Netlify (build desde el repo)
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"

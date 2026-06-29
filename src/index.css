@@ -1,0 +1,394 @@
+:root {
+  --maroon: #8b1a2b;
+  --orange: #d4581a;
+  --peach: #e8956d;
+  --ink: #0c1016;
+  --glass: rgba(16, 20, 28, 0.72);
+  --glass-brd: rgba(255, 255, 255, 0.12);
+  --txt: #eef1f5;
+  font-family: ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+body {
+  overflow: hidden;
+  background: #0b0e13;
+  color: var(--txt);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.app {
+  position: fixed;
+  inset: 0;
+}
+canvas {
+  display: block;
+  touch-action: none;
+}
+
+/* ---------- barra superior ---------- */
+.topbar {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 12px;
+  background: var(--glass);
+  border: 1px solid var(--glass-brd);
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 20;
+  flex-wrap: wrap;
+}
+.topbar .brand {
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.topbar .brand em {
+  font-style: normal;
+  color: var(--peach);
+  font-weight: 700;
+}
+.topbar .brand .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--orange);
+  box-shadow: 0 0 10px var(--orange);
+}
+
+/* segmento Exterior/Recorrido */
+.seg {
+  display: inline-flex;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--glass-brd);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.seg button {
+  border: 0;
+  background: transparent;
+  color: var(--txt);
+  padding: 7px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.seg button.active {
+  background: linear-gradient(135deg, var(--maroon), var(--orange));
+  color: #fff;
+}
+
+.chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.chip {
+  border: 1px solid var(--glass-brd);
+  background: rgba(255, 255, 255, 0.05);
+  color: #c8ccd2;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.chip.on {
+  background: rgba(212, 88, 26, 0.22);
+  border-color: var(--orange);
+  color: #fff;
+}
+
+.chip-sep {
+  width: 1px;
+  height: 20px;
+  background: var(--glass-brd);
+  margin: 0 2px;
+}
+
+.help-btn {
+  margin-left: auto;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-brd);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ---------- mira + pista ---------- */
+.crosshair {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 0 1.5px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  z-index: 15;
+}
+.hint {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  background: var(--glass);
+  border: 1px solid var(--glass-brd);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  backdrop-filter: blur(8px);
+  z-index: 15;
+  white-space: nowrap;
+}
+
+/* ---------- leyenda ---------- */
+.legend {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  background: var(--glass);
+  border: 1px solid var(--glass-brd);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 11.5px;
+  display: grid;
+  gap: 4px;
+  backdrop-filter: blur(8px);
+  z-index: 14;
+}
+.legend .sw {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+  margin-right: 6px;
+  vertical-align: -1px;
+}
+
+/* ---------- panel de áreas ---------- */
+.areas-panel {
+  position: fixed;
+  left: 12px;
+  top: 70px;
+  width: 210px;
+  background: var(--glass);
+  border: 1px solid var(--glass-brd);
+  border-radius: 12px;
+  padding: 12px 14px;
+  backdrop-filter: blur(10px);
+  z-index: 14;
+  font-size: 12.5px;
+}
+.areas-panel h4 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #9fb6c2;
+}
+.areas-panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 5px;
+}
+.areas-panel li {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.areas-panel li span {
+  color: #c9cfd6;
+}
+.areas-panel li b {
+  color: #fff;
+  white-space: nowrap;
+}
+.areas-panel .total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 9px;
+  padding-top: 8px;
+  border-top: 1px solid var(--glass-brd);
+  font-weight: 600;
+}
+.areas-panel .total b {
+  color: var(--peach);
+}
+
+/* ---------- barra de medición ---------- */
+.measure-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--glass);
+  border: 1px solid var(--glass-brd);
+  padding: 8px 12px 8px 14px;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  z-index: 16;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.measure-bar .tag {
+  font-weight: 700;
+}
+.measure-bar .val {
+  font-weight: 700;
+  color: #ff8d8d;
+  font-size: 15px;
+}
+.measure-bar .muted {
+  color: #aeb6c0;
+}
+.measure-bar button {
+  border: 1px solid var(--glass-brd);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* ---------- minimapa ---------- */
+.minimap {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  width: 200px;
+  height: 200px;
+  background: var(--glass);
+  border: 1px solid var(--glass-brd);
+  border-radius: 12px;
+  padding: 6px;
+  backdrop-filter: blur(8px);
+  z-index: 14;
+}
+.minimap svg {
+  width: 100%;
+  height: 100%;
+}
+.mm-tags {
+  position: absolute;
+  inset: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  pointer-events: none;
+  font-size: 9.5px;
+  color: #aeb6c0;
+  padding: 4px;
+}
+.mm-tags span:first-child {
+  align-self: flex-start;
+}
+
+/* ---------- ayuda ---------- */
+.help-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: grid;
+  place-items: center;
+  z-index: 40;
+  backdrop-filter: blur(3px);
+}
+.help-modal .card {
+  width: min(520px, 92vw);
+  background: #11151c;
+  border: 1px solid var(--glass-brd);
+  border-radius: 16px;
+  padding: 22px 24px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+.help-modal h2 {
+  margin: 0 0 12px;
+  font-size: 19px;
+}
+.help-modal p {
+  margin: 8px 0;
+  line-height: 1.5;
+  font-size: 14px;
+  color: #d6dae0;
+}
+.help-modal hr {
+  border: 0;
+  border-top: 1px solid var(--glass-brd);
+  margin: 14px 0;
+}
+.help-modal .muted {
+  color: #97a0ab;
+  font-size: 12.5px;
+}
+.help-modal .close {
+  margin-top: 14px;
+  border: 0;
+  background: linear-gradient(135deg, var(--maroon), var(--orange));
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ---------- joystick móvil ---------- */
+.joystick-zone {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 160px;
+  height: 160px;
+  z-index: 16;
+}
+
+@media (max-width: 720px) {
+  .topbar {
+    gap: 8px;
+    padding: 6px 8px;
+  }
+  .topbar .brand {
+    font-size: 12px;
+  }
+  .chips {
+    order: 3;
+    width: 100%;
+  }
+  .legend {
+    display: none;
+  }
+  .minimap {
+    width: 140px;
+    height: 140px;
+  }
+}
